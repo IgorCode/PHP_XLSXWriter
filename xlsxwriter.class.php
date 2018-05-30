@@ -297,19 +297,19 @@ class XLSXWriter
 
 		$sheet->file_writer->write(    '</sheetData>');
 
+		$max_cell = self::xlsCell($sheet->row_count - 1, count($sheet->columns) - 1);
+
+		if ($sheet->auto_filter) {
+			$startDataRow = $sheet->freeze_rows ?: 1;
+			$sheet->file_writer->write(    '<autoFilter ref="A'.$startDataRow.':' . $max_cell . '"/>');
+		}
+
 		if (!empty($sheet->merge_cells)) {
 			$sheet->file_writer->write(    '<mergeCells>');
 			foreach ($sheet->merge_cells as $range) {
 				$sheet->file_writer->write(        '<mergeCell ref="' . $range . '"/>');
 			}
 			$sheet->file_writer->write(    '</mergeCells>');
-		}
-
-		$max_cell = self::xlsCell($sheet->row_count - 1, count($sheet->columns) - 1);
-
-		if ($sheet->auto_filter) {
-			$startDataRow = $sheet->freeze_rows ?: 1;
-			$sheet->file_writer->write(    '<autoFilter ref="A'.$startDataRow.':' . $max_cell . '"/>');
 		}
 
 		$sheet->file_writer->write(    '<printOptions headings="false" gridLines="false" gridLinesSet="true" horizontalCentered="false" verticalCentered="false"/>');
